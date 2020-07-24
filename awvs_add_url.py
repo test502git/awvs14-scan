@@ -1,5 +1,10 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
+import sys
+version = sys.version_info
+if version < (3, 0):
+    print('The current version is not supported, you need to use python3')
+    sys.exit()
 import requests
 import json
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -59,6 +64,29 @@ def configuration(url,target_id,proxy_address,proxy_port,Crawl,user_agent,scan_s
     r = requests.patch(url=configuration_url,data=json.dumps(data), headers=headers, timeout=30, verify=False)
     #print(r.text)
 
+def delete_targets():#删除全部扫描目标
+    global awvs_url,apikey,headers
+    while 1:
+        quer='/api/v1/targets'
+        try:
+            r = requests.get(awvs_url+quer, headers=headers, timeout=30, verify=False)
+            result = json.loads(r.content.decode())
+            if int(result['pagination']['count'])==0:
+                print('已全部删除扫描目标，目前为空')
+                return 0
+            for targetsid in range(len(result['targets'])):
+                targets_id=result['targets'][targetsid]['target_id']
+                targets_address = result['targets'][targetsid]['address']
+                #print(targets_id,targets_address)
+                try:
+                    del_log=requests.delete(awvs_url+'/api/v1/targets/'+targets_id,headers=headers, timeout=30, verify=False)
+                    if del_log.status_code == 204:
+                        print(targets_address,' 删除目标成功')
+                except Exception as e:
+                    print(targets_address,e)
+        except Exception as e:
+            print(awvs_url+quer,e)
+
 def main():
     global add_count_suss,error_count
 ########################################################AWVS扫描配置参数#########################################
@@ -74,7 +102,7 @@ def main():
 
     # 设置所有批量url的 统一Cookie，可以更深度扫描，
     scan_cookie="""
-    face=auto; locale=zh_CN; CoremailReferer=https%3A%2F%2Fcrmail.crc.com.cn%2F; Coremail.sid=CAOMjwiPhSzsbqqrtTPPInyfDGBcfVDQ
+    _ga=GA1.2.496482429.1594958981; _gid=GA1.2.1240549582.1595211950; night=0; clostip=0
     """.replace('\n','').strip()#处理前后空格 与换行。
 
     mod_id = {
@@ -86,7 +114,7 @@ def main():
         "crawl_only": "11111111-1111-1111-1111-111111111117",                # Crawl Only
         "malware_scan": "11111111-1111-1111-1111-111111111120"               # 恶意软件扫描
     }
-    profile_id = mod_id['crawl_only']   #扫描类型
+    profile_id = mod_id['full_scan']   #扫描类型
 
 ########################################################扫描配置参数#########################################
 
@@ -98,7 +126,6 @@ def main():
         target = target.strip()
         #if '://' not in target and 'http' not in target:
         if 'http' not in target[0:7]:
-
             target='http://'+target
         if scan(awvs_url,target,Crawl,user_agent,profile_id,proxy_address,int(proxy_port),scan_speed,limit_crawler_scope,excluded_paths,scan_cookie):
             open('./add_log/success.txt','a',encoding='utf-8').write(target+'\n')
@@ -108,6 +135,15 @@ def main():
             open('./add_log/error_url.txt', 'a', encoding='utf-8').write(target + '\n')
             error_count=error_count+1
             print("{0} 添加失败".format(target),str(error_count))
-
 if __name__ == '__main__':
-    main()
+    print(    """
+批量添加url到扫描器  请按：1 
+删除扫描器内所有目标 请按：2
+    """)
+    selection=input('回车( 默认为1):')
+    if selection=='':
+        selection='1'
+    if selection==str(1):
+        main()
+    elif selection==str(2):
+        delete_targets()
