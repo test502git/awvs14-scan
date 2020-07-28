@@ -4,7 +4,7 @@
 完美支持AWVS13,AWVS12两个版本的API接口
 
 * 支持URL批量添加扫描
-* 支持添加`cooKie`凭证进行扫描
+* 支持对批量url添加`cooKie`凭证进行爬虫扫描
 * 支持结合被动扫描器进行配置扫描,如：`xray`,`w13scan`,`burp`等扫描器
 * 支持一键删除所有任务
 * 通过配置`awvs_config.ini`文件，支持自定义各种扫描参数，如:爬虫速度，排除路径(不扫描的目录),全局`cookie`,限制为仅包含地址和子目录
@@ -20,11 +20,15 @@
 ![awvs_add_url](https://github.com/test502git/awvs13_batch_py3/blob/master/add_log/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20200728190739.png)
 
 
-现在就可以根据自己需求进行扫描吧。
+现在就可以根据自己需求进行扫描吧
+
+
+#### awvs12批量添加并设置仅爬虫，配置好cookie等参数，发送到xray扫描器扫描
+![awvs_add_url](https://github.com/test502git/awvs13_batch_py3/blob/master/add_log/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20200728204949.png)
 
 
 ## AWVS安装
-推荐使用`Docker`进行部署，个人也比较喜欢。
+推荐使用`Docker`进行部署，个人也比较喜欢
 
 ```
 docker pull vouu/acunetix
