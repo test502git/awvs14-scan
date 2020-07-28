@@ -18,6 +18,29 @@ apikey = cf.get('awvs_url_key','api_key')
 headers = {'Content-Type': 'application/json',"X-Auth": apikey}
 add_count_suss=0
 error_count=0
+target_scan=False
+target_list=[]
+pages = 10
+
+def get_target_list():#获取扫描器内所有目标
+    global pages,target_list
+    while 1:
+        target_dict={}
+        get_target_url=awvs_url+'/api/v1/targets?c={}&l=10'.format(str(pages))
+        r = requests.get(get_target_url, headers=headers, timeout=30, verify=False)
+        result = json.loads(r.content.decode())
+        try:
+            for targetsid in range(len(result['targets'])):
+                target_dict={'target_id':result['targets'][targetsid]['target_id'],'address':result['targets'][targetsid]['address']}
+                target_list.append(target_dict)
+            pages=pages+10
+
+            if len(result['targets'])==0:
+                break
+        except Exception as e:
+            return r.text
+
+
 def addTask(url,target):
     try:
         url = ''.join((url, '/api/v1/targets/add'))
@@ -31,10 +54,11 @@ def scan(url,target,Crawl,user_agent,profile_id,proxy_address,proxy_port,scan_sp
     scanUrl = ''.join((url, '/api/v1/scans'))
     target_id = addTask(url,target)
     if target_id:
-        data = {"target_id": target_id, "profile_id": profile_id, "incremental": False, "schedule": {"disable": False, "start_date": None, "time_sensitive": False}}
         try:
             configuration(url,target_id,proxy_address,proxy_port,Crawl,user_agent,scan_speed,limit_crawler_scope,excluded_paths,scan_cookie,target)#配置目标参数信息
             if is_to_scan:
+                data = {"target_id": target_id, "profile_id": profile_id, "incremental": False,
+                        "schedule": {"disable": False, "start_date": None, "time_sensitive": False}}
                 response = requests.post(scanUrl, data=json.dumps(data), headers=headers, timeout=30, verify=False)
                 result = json.loads(response.content)
                 return result['target_id']
@@ -86,7 +110,7 @@ def delete_targets():#删除全部扫描目标
             print(awvs_url+quer,e)
 
 def main():
-    global add_count_suss,error_count
+    global add_count_suss,error_count,target_scan
 ########################################################AWVS扫描配置参数#########################################
     Crawl = False                   #默认False，不会启用
     proxy_address = '127.0.0.1'     #不要删，不会启用
@@ -106,20 +130,31 @@ def main():
         "7": "11111111-1111-1111-1111-111111111120",                # 恶意软件扫描
         "8": "11111111-1111-1111-1111-111111111120"                 #仅添加，这行不会生效
     }
-    print("""选择要扫描的类型：
+    if target_scan==False:
+        print("""选择要扫描的类型：
+1 【开始 完全扫描】
+2 【开始 扫描高风险漏洞】
+3 【开始 扫描XSS漏洞】
+4 【开始 扫描SQL注入漏洞】
+5 【开始 弱口令检测】
+6 【开始 Crawl Only,仅爬虫，将进入被动扫描器地址设置】
+7 【开始 扫描意软件扫描】
+8 【仅添加 目标到扫描器，不做任何扫描】""")
+    else:
+        print("""对已有目标进行扫描，选择要扫描的类型：
 1 【完全扫描】
 2 【扫描高风险漏洞】
 3 【扫描XSS漏洞】
 4 【扫描SQL注入漏洞】
 5 【弱口令检测】
-6 【Crawl Only,仅爬虫，将进入被动扫描器地址设置】
-7 【扫描意软件扫描】
-8 【仅添加目标到扫描器，不做任何扫描】""")
+6 【Crawl Only,仅爬虫，将进入被动扫描器地址设置】,存在bug
+7 【扫描意软件扫描】""")
     scan_type = str(input('请输入数字:'))
     try:
         is_to_scan = True
-        if '8'==scan_type:
-            is_to_scan = False
+        if target_scan==False:
+            if '8'==scan_type:
+                is_to_scan = False
         profile_id=mod_id[scan_type]
 
     except Exception as e:
@@ -135,23 +170,47 @@ def main():
     user_agent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.21 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.21" #扫描默认UA头
     if Crawl:#仅调用xray进行代理扫描
         profile_id = "11111111-1111-1111-1111-111111111117"
-    for target in targets:
-        target = target.strip()
-        #if '://' not in target and 'http' not in target:
-        if 'http' not in target[0:7]:
-            target='http://'+target
+    if target_scan==False:
+        for target in targets:
+            target = target.strip()
+            #if '://' not in target and 'http' not in target:
+            if 'http' not in target[0:7]:
+                target='http://'+target
 
-        target_state=scan(awvs_url,target,Crawl,user_agent,profile_id,proxy_address,int(proxy_port),scan_speed,limit_crawler_scope,excluded_paths,scan_cookie,is_to_scan)
-        if target_state!=2:
-            open('./add_log/success.txt','a',encoding='utf-8').write(target+'\n')
-            add_count_suss=add_count_suss+1
-            print("{0} 添加成功,加入到扫描队列 ，第:".format(target),str(add_count_suss))
-        elif target_state==2:
-            pass
-        else:
-            open('./add_log/error_url.txt', 'a', encoding='utf-8').write(target + '\n')
-            error_count=error_count+1
-            print("{0} 添加失败".format(target),str(error_count))
+            target_state=scan(awvs_url,target,Crawl,user_agent,profile_id,proxy_address,int(proxy_port),scan_speed,limit_crawler_scope,excluded_paths,scan_cookie,is_to_scan)
+            if target_state!=2:
+                open('./add_log/success.txt','a',encoding='utf-8').write(target+'\n')
+                add_count_suss=add_count_suss+1
+                print("{0} 已加入到扫描队列 ，第:".format(target),str(add_count_suss))
+            elif target_state==2:
+                pass
+            else:
+                open('./add_log/error_url.txt', 'a', encoding='utf-8').write(target + '\n')
+                error_count=error_count+1
+                print("{0} 添加失败".format(target),str(error_count))
+    elif target_scan==True:
+
+
+        get_target_list()
+        scanUrl2= ''.join((awvs_url, '/api/v1/scans'))
+        for target_for in target_list:
+            data = {"target_id": target_for['target_id'], "profile_id": profile_id, "incremental": False,
+                    "schedule": {"disable": False, "start_date": None, "time_sensitive": False}}
+            configuration(awvs_url, target_for['target_id'], proxy_address, proxy_port, Crawl, user_agent, scan_speed,
+                          limit_crawler_scope,
+                          excluded_paths, scan_cookie, target_for['address'])  #已有目标扫描时配置
+
+
+
+            try:
+                response = requests.post(scanUrl2, data=json.dumps(data), headers=headers, timeout=30, verify=False)
+                result = json.loads(response.content)
+                if 'profile_id' in str(result) and 'target_id' in str(result):
+                    print(target_for['address'],'添加到扫描器队列，开始扫描')
+            except Exception as e:
+                print(str(target_for['address'])+' 扫描失败 ',e)
+
+
 if __name__ == '__main__':
 
     print(    """
@@ -164,3 +223,7 @@ if __name__ == '__main__':
         main()
     elif selection==2:
         delete_targets()
+    elif selection==3:
+        target_scan=True
+        main()
+
