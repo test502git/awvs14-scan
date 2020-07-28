@@ -13,11 +13,11 @@
 ## 使用教程
 
 #### 1、配置好当前目前的awvs_config.ini文件
-图片
+![awvs_config.ini](https://github.com/test502git/awvs13_batch_py3/blob/master/add_log/config.png)
 
 
 #### 2、使用Python3运行awvs_add_url-v2.0.py
-图片
+![awvs_add_url](https://github.com/test502git/awvs13_batch_py3/blob/master/add_log/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20200728190739.png)
 
 
 现在就可以根据自己需求进行扫描吧。
