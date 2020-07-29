@@ -39,6 +39,7 @@ docker pull vouu/acunetix
 docker run -it -d --storage-opt size=40G -m 1024 -p 443:3443 vouu/acunetix
 ```
  --storage-opt size=40G #指设置改容器的rootfs大小。默认Docker只有10G大小，对于AWVS这样的扫描器，域名一多，肯定是不够用的啦，同学们自己也可以根据自己主机的配置合理选择。
+ 
  -m 1024                #指AWVS容器占用内存最高为1024M，这也是防止内存占满导致主机崩溃，同学们自己也可以根据自己主机的配置合理选择。
 
 
