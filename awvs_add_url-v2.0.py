@@ -109,6 +109,19 @@ def delete_targets():#删除全部扫描目标
         except Exception as e:
             print(awvs_url+quer,e)
 
+
+def CustomScan():#增加自定义扫描，减少AWVS误报
+    get_target_url = awvs_url + '/api/v1/scanning_profiles'
+    #主要是排除一些漏洞,如：CORS,CSRF,DDOS，等无用漏洞
+    post_data={"checks":["wvs/location/cors_origin_validation.js","wvs/CSRF","wvs/SlowHTTPDOS","wvs/Scripts/PerFile/Javascript_Libraries_Audit.script","ovas/"], "custom": True, "name": "CustomScan"}
+    r = requests.post(get_target_url, data=json.dumps(post_data),headers=headers, timeout=30, verify=False)
+    result = json.loads(r.content.decode())
+    get_target_url = awvs_url + 'api/v1/scanning_profiles'
+    r = requests.get(get_target_url,headers=headers, timeout=30, verify=False)
+    result = json.loads(r.content.decode())
+    return result['scanning_profiles'][7]['profile_id']
+
+
 def main():
     global add_count_suss,error_count,target_scan
 ########################################################AWVS扫描配置参数#########################################
@@ -128,7 +141,8 @@ def main():
         "5": "11111111-1111-1111-1111-111111111115",                # 弱口令检测
         "6": "11111111-1111-1111-1111-111111111117",                # Crawl Only
         "7": "11111111-1111-1111-1111-111111111120",                # 恶意软件扫描
-        "8": "11111111-1111-1111-1111-111111111120"                 #仅添加，这行不会生效
+        "8": "11111111-1111-1111-1111-111111111120",                 #仅添加，这行不会生效
+        "9": "CustomScan"
     }
     if target_scan==False:
         print("""选择要扫描的类型：
@@ -139,7 +153,8 @@ def main():
 5 【开始 弱口令检测】
 6 【开始 Crawl Only,仅爬虫，将进入被动扫描器地址设置】
 7 【开始 扫描意软件扫描】
-8 【仅添加 目标到扫描器，不做任何扫描】""")
+8 【仅添加 目标到扫描器，不做任何扫描】
+9 【开始 完全扫描】升级版，不扫描CORS,CSRF,等误报性高的漏洞""")
     else:
         print("""对已有目标进行扫描，选择要扫描的类型：
 1 【完全扫描】
@@ -148,15 +163,18 @@ def main():
 4 【扫描SQL注入漏洞】
 5 【弱口令检测】
 6 【Crawl Only,仅爬虫，将进入被动扫描器地址设置】
-7 【扫描意软件扫描】""")
+7 【扫描意软件扫描】
+9 【开始 完全扫描】升级版，不扫描CORS,CSRF,等误报性高的漏洞""")
+
     scan_type = str(input('请输入数字:'))
     try:
         is_to_scan = True
         if target_scan==False:
             if '8'==scan_type:
                 is_to_scan = False
-        profile_id=mod_id[scan_type]
-
+        profile_id=mod_id[scan_type]#获取扫描漏洞类型
+        if '9' == scan_type:
+            profile_id=CustomScan()
     except Exception as e:
         print('输入有误，检查',e)
         sys.exit()
@@ -189,8 +207,6 @@ def main():
                 error_count=error_count+1
                 print("{0} 添加失败".format(target),str(error_count))
     elif target_scan==True:
-
-
         get_target_list()
         scanUrl2= ''.join((awvs_url, '/api/v1/scans'))
         for target_for in target_list:
@@ -199,9 +215,6 @@ def main():
             configuration(awvs_url, target_for['target_id'], proxy_address, proxy_port, Crawl, user_agent, scan_speed,
                           limit_crawler_scope,
                           excluded_paths, scan_cookie, target_for['address'])  #已有目标扫描时配置
-
-
-
             try:
                 response = requests.post(scanUrl2, data=json.dumps(data), headers=headers, timeout=30, verify=False)
                 result = json.loads(response.content)
@@ -246,6 +259,7 @@ if __name__ == '__main__':
 1 【批量添加url到AWVS扫描器扫描】
 2 【一键删除扫描器内所有目标】
 3 【对扫描器中已有目标，进行扫描】 
+4 【一键停止扫描目前所有扫描任务】 开发中
     """)
     selection=int(input('请输入数字:'))
     if selection==1:
