@@ -1,6 +1,10 @@
 # AWVS批量扫描脚本
 ![awvs_config.ini](https://s1.ax1x.com/2020/08/06/agCwPs.png)
 
+
+## 联动Xray说明一下 
+如果AWVS爬虫请求太多，此时发送给Xray，可能会占满Xray队列(max_length)，导致代理阻塞，由于Xray的阻塞，AWVS会导致爬虫超时，这个在Xray文档中有说明，所以在批量之前 ，尽可能把Xray的max_length的值设成很大
+
 ## 脚本功能
 完美支持AWVS13,AWVS12两个版本的API接口
 
