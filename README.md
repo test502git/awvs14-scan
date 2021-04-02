@@ -1,4 +1,4 @@
-# AWVS批量扫描脚本，支持批量代
+# AWVS批量扫描脚本，支持批量代理
 ![awvs_config.ini](https://s1.ax1x.com/2020/08/06/agCwPs.png)
 
 
