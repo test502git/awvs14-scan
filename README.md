@@ -1,4 +1,4 @@
-# AWVS13、14批量扫描脚本，支持批量代理
+a# AWVS13、14批量扫描脚本，支持批量代理
 ![awvs_config.ini](https://s1.ax1x.com/2020/08/06/agCwPs.png)
 
 
@@ -16,6 +16,9 @@
 * 支持对扫描器内已有目标进行批量扫描，支持自定义扫描类型
 
 ## 使用教程
+
+
+awvs_config.ini请使用专业编辑器打开，记事本会改变原有格式，导致报错
 
 #### 1、配置好当前目前的awvs_config.ini文件
 ![awvs_config.ini](https://github.com/test502git/awvs13_batch_py3/blob/master/add_log/config.png)
