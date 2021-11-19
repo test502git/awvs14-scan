@@ -12,7 +12,7 @@ import configparser
 scan_label='脚本默认标签'
 cf = configparser.ConfigParser()
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-cf.read(r"awvs_config.ini",encoding='utf-8')
+cf.read(r"config.ini",encoding='utf-8')
 secs=cf.sections()
 awvs_url =cf.get('awvs_url_key','awvs_url')
 apikey = cf.get('awvs_url_key','api_key')
