@@ -9,6 +9,7 @@ import requests
 import json,ast
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 import configparser
+scan_label='脚本默认标签'
 cf = configparser.ConfigParser()
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 cf.read(r"awvs_config.ini",encoding='utf-8')
@@ -42,15 +43,17 @@ def get_target_list():#获取扫描器内所有目标
 
 
 def addTask(url,target):
+    global scan_label
     try:
         url = ''.join((url, '/api/v1/targets/add'))
-        data = {"targets":[{"address": target,"description":"此url为脚本添加"}],"groups":[]}
+        data = {"targets":[{"address": target,"description":scan_label}],"groups":[]}
         r = requests.post(url, headers=headers, data=json.dumps(data), timeout=30, verify=False)
         result = json.loads(r.content.decode())
         return result['targets'][0]['target_id']
     except Exception as e:
         return e
 def scan(url,target,Crawl,user_agent,profile_id,proxy_address,proxy_port,scan_speed,limit_crawler_scope,excluded_paths,scan_cookie,is_to_scan):
+    global scan_label
     scanUrl = ''.join((url, '/api/v1/scans'))
     target_id = addTask(url,target)
     if target_id:
@@ -123,7 +126,7 @@ def CustomScan():#增加自定义扫描，减少AWVS误报
 
 
 def main():
-    global add_count_suss,error_count,target_scan
+    global add_count_suss,error_count,target_scan,scan_label
 ########################################################AWVS扫描配置参数#########################################
     Crawl = False                   #默认False，不会启用
     proxy_address = '127.0.0.1'     #不要删，不会启用
@@ -167,6 +170,7 @@ def main():
 9 【开始 完全扫描】升级版，不扫描CORS,CSRF,等误报性高的漏洞""")
 
     scan_type = str(input('请输入数字:'))
+    scan_label = str(input('输入本次要扫描的资产标签（可空）:'))
     try:
         is_to_scan = True
         if target_scan==False:
@@ -179,8 +183,9 @@ def main():
         print('输入有误，检查',e)
         sys.exit()
     if profile_id=='11111111-1111-1111-1111-111111111117':
-        proxy_address=str(input('输入被动扫描器监听IP地址(如：192.168.10.5)'))
-        proxy_port=str(input('输入被动扫描器监听端口(如：7777)：'))
+        print('【如 联动xray扫描器】： xray_windows_amd64.exe webscan --listen 192.168.2.2:7777')
+        proxy_address=str(input('被动扫描器监听IP地址(如：192.168.2.2)'))
+        proxy_port=str(input('被动扫描器监听端口(如：7777)：'))
         Crawl = True
 ########################################################扫描配置参数#########################################
 
@@ -227,33 +232,8 @@ def main():
 if __name__ == '__main__':
 
     print(    """
-********************************************************************                                                                                                                                         
-                         .@@@@@.***.    ..***.    .***]@@@@`.                                   
-                        */@^*@@^.**     ..***.   ..*..@@.@@@^                                   
-                        .[@//@@^**...*]]]]]/@@^..*** *@@,@@/.                                   
-                          *@@@^*.*...@@,*,@@*=@******.**@@\*                                    
-                         **[[\*.....**\@@@*..=@@@@@@\*,.[\`*.   .                               
-                        .**@@@`***,@@[[`    .*..***[[@@@@@@***.*.                               
-                         .*....*.,]**..*.    .*.*****..*,\@@`*.**.                              
-          .*..*..*..    .*.*.**/@@@@@@@\]**/@@@@@@@`..****,@@`.*..    *.*,]]***.                
-          ***,]]]***     .****=@/..*****=@@`*****.*=@^***.*,@\***.   .*=@/*=@]**                
-          **@@`*@@@.    .**.*@@^*@@@^ **=@@@@@^****,@@*.. ***\@^..   .*\@@.=@@`*.               
-          .,[@//@@/*    .*.,@@@^*@@@`*.*=@`\@@`**.*=@@*.    **@@.    .***=@@^***                
-          ****@@@@*.    .*=@^*\@`*.*****/@@`******,@@/*    .**,@^.    ...=@@^***.               
-          **.*@@@*.*     .@@@@@@@@@\/@@@@[\@@@\]/@@@*,]/\]]`*.*=@^*****..=@@^..*.               
-          ****/@@***.    .@@@@@@@`,/@/.\`**@^*/@`*.,@@@@@@@@@`**@@*..***......**.               
-          .....**.**     .@@@@@@@@@@@@@@@@@@@@@@@**\@@@@@@@@@^*=@@.*.*.**....**.                
-                         *=@@@@@@^.=@@@@@@@@@@@[`.*=@@@@@@@@@`.@@`                              
-                         ..@@@@@****,[@@@@@@[**.****,@@@@@@/`=@@`                               
-                         ..,\@@\***. ... .... .....   .*[**]@@@@`.....*.*.*.                    
-                        .***.**@@\`                   .*=@@@@@*@@@\*******.                     
-                        .***.**@@[[`                   ..**.****.,@@@@\*.**.                    
-                        .*.**=@@**.                             ...*,@@....                     
-                        .*.**@@^*...                            .***.@@....                     
-                         .*.*@@`.*.                             .**.*@@*.*.                     
-                        .**.*@@^,*.                              ***,@@*.**.                    
-                        .****\@^***.                            .**.@@/****.                    
-                              =@@**.                            .*=@@^                                                                                                                                                   
+********************************************************************      
+AWVS批量添加  带联动被动扫描器功能                                                                                                        
 作者微信：SRC-ALL
 ********************************************************************
 1 【批量添加url到AWVS扫描器扫描】
