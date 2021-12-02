@@ -35,7 +35,19 @@
 ![awvs_add_url](https://github.com/test502git/awvs13_batch_py3/blob/master/add_log/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20200728204949.png)
 
 
-## AWVS安装
-推荐使用`Docker`进行部署，个人也比较喜欢
+## AWVS性能优化(防止awvs宕机) 1核1G vps举例
+#### 内存限制
+如： 限制awvs 最多占用0.5G内存(按机器实际情况配置)
+```docker update --memory 512m --memory-swap -1 awvs容器id```
 
+#### CPU限制
+如： 假机器有1核，下面是限制awvs最多使用0.5核，  那么主机最多cpu占用率不会超过50%(按机器实际情况配置)
+
+```docker update --cpus 0.5 --memory-swap -1 awvs容器id```
+
+#### 容器自启
+主要防止意外情况主机的重启 后awvs不会自启
+ ```docker update --restart=always awvs容器id ```
+
+这样一套设置下来后再扫，awvs永不死机
 
