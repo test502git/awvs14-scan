@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
-import sys
+import sys,os
 version = sys.version_info
 if version < (3, 0):
     print('The current version is not supported, you need to use python3')
@@ -12,16 +12,50 @@ import configparser
 scan_label='脚本默认标签'
 cf = configparser.ConfigParser()
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-cf.read(r"config.ini",encoding='utf-8')
-secs=cf.sections()
-awvs_url =cf.get('awvs_url_key','awvs_url')
-apikey = cf.get('awvs_url_key','api_key')
+
+print('初始化中~')
+try:
+    cf.read(r"config.ini",encoding='utf-8')
+    secs=cf.sections()
+    awvs_url =cf.get('awvs_url_key','awvs_url')
+    apikey = cf.get('awvs_url_key','api_key')
+    input_urls=cf.get('awvs_url_key','domain_file')
+    excluded_paths = ast.literal_eval(cf.get('scan_seting', 'excluded_paths'))
+    limit_crawler_scope = cf.get('scan_seting', 'limit_crawler_scope')
+    scan_speed = cf.get('scan_seting', 'scan_speed')
+    scan_cookie = cf.get('scan_seting', 'cookie').replace('\n', '').strip()  # 处理前后空格 与换行。
+except Exception as e:
+    print('初始化失败，获取config.ini失败，请检查config.ini文件是否正确\n', e)
+    sys.exit()
+
+
 headers = {'Content-Type': 'application/json',"X-Auth": apikey}
 add_count_suss=0
 error_count=0
 target_scan=False
 target_list=[]
 pages = 10
+
+
+def get_status():
+    try:
+        r = requests.get(awvs_url + '/api/v1/targets', headers=headers, timeout=10, verify=False)
+        if r.status_code==401:
+            print('awvs认证失败，请检查config.ini配置的中api_key是否正确')
+            sys.exit()
+        if r.status_code==200 and 'targets' in str(r.text):
+            pass
+    except Exception as e:
+        print('初始化失败，请检查config.ini文件中的awvs_url是否正确\n',e)
+        sys.exit()
+
+
+    print('初始化完成，配置正确')
+
+get_status()
+
+
+
 
 def get_target_list():#获取扫描器内所有目标
     global pages,target_list
@@ -126,16 +160,16 @@ def CustomScan():#增加自定义扫描，减少AWVS误报
 
 
 def main():
-    global add_count_suss,error_count,target_scan,scan_label
+    global add_count_suss,error_count,target_scan,scan_label,input_urls,excluded_paths,limit_crawler_scope,scan_speed,scan_cookie
 ########################################################AWVS扫描配置参数#########################################
     Crawl = False                   #默认False，不会启用
     proxy_address = '127.0.0.1'     #不要删，不会启用
     proxy_port = '777'              #不要删，不会启用
-    input_urls=cf.get('awvs_url_key','domain_file')
-    excluded_paths=ast.literal_eval(cf.get('scan_seting','excluded_paths'))
-    limit_crawler_scope=cf.get('scan_seting','limit_crawler_scope')
-    scan_speed = cf.get('scan_seting','scan_speed')
-    scan_cookie=cf.get('scan_seting','cookie').replace('\n','').strip()#处理前后空格 与换行。
+    input_urls=input_urls
+    excluded_paths=excluded_paths
+    limit_crawler_scope=limit_crawler_scope
+    scan_speed = scan_speed
+    scan_cookie=scan_cookie
     mod_id = {
         "1": "11111111-1111-1111-1111-111111111111",                 # 完全扫描
         "2": "11111111-1111-1111-1111-111111111112",                # 高风险漏洞
@@ -249,4 +283,3 @@ AWVS批量添加  带联动被动扫描器功能
     elif selection==3:
         target_scan=True
         main()
-
