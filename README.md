@@ -35,7 +35,7 @@
 ![awvs_add_url](https://github.com/test502git/awvs13_batch_py3/blob/master/add_log/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20200728204949.png)
 
 
-## AWVS性能优化(防止awvs宕机) 1核1G vps举例
+## AWVS性能优化(防止AWVS宕机) 1核1G vps举例
 #### 内存限制
 如： 限制awvs 最多占用0.5G内存(按机器实际情况配置)
 
