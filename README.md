@@ -18,7 +18,7 @@
 ## 使用教程
 
 
-awvs_config.ini请使用专业编辑器打开，记事本会改变原有格式，导致报错
+### awvs_config.ini请使用专业编辑器打开，记事本会改变原有格式，导致报错
 
 #### 1、配置好当前目前的awvs_config.ini文件
 ![awvs_config.ini](https://github.com/test502git/awvs13_batch_py3/blob/master/add_log/config.png)
