@@ -38,6 +38,7 @@
 ## AWVS性能优化(防止awvs宕机) 1核1G vps举例
 #### 内存限制
 如： 限制awvs 最多占用0.5G内存(按机器实际情况配置)
+
 ```docker update --memory 512m --memory-swap -1 awvs容器id```
 
 #### CPU限制
@@ -47,6 +48,7 @@
 
 #### 容器自启
 主要防止意外情况主机的重启 后awvs不会自启
+
  ```docker update --restart=always awvs容器id ```
 
 这样一套设置下来后再扫，awvs永不死机
