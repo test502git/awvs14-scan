@@ -40,6 +40,13 @@
 #### awvs13批量添加并设置仅爬虫，配置好cookie等参数，发送到xray扫描器扫描
 ![awvs_add_url](https://github.com/test502git/awvs13_batch_py3/blob/master/add_log/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20200728204949.png)
 
+## AWVS14安装，最新支持log4j版本，完美破解版
+推荐使用docker 
+```
+docker pull xiaomimi8/awvs14-log4j-2022
+
+```
+
 
 ## AWVS性能优化(防止AWVS宕机) 1核1G vps举例
 #### 内存限制
