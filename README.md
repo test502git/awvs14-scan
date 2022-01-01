@@ -28,6 +28,7 @@ docker pull xiaomimi8/awvs14-log4j-2022
 启动
 docker run -it -d -p 13443:3443 xiaomimi8/awvs14-log4j-2022
 
+用户名：admin@admin.com 密码：Admin123 
 ```
 
 ## 脚本功能
