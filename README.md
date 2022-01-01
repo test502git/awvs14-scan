@@ -43,7 +43,13 @@
 ## AWVS14安装，最新支持log4j版本，完美破解版
 推荐使用docker 
 ```
+安装
 docker pull xiaomimi8/awvs14-log4j-2022
+
+启动
+docker run -it -d -p 13443:3443 xiaomimi8/awvs14-log4j-2022
+
+
 
 ```
 
