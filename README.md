@@ -11,6 +11,11 @@
 
 
 ## 2022年1月1号，新支持批量自检log4j漏洞
+
+### log4j靶场 地址：http://d63bb2586.lab.aqlab.cn/  可测试效果
+
+
+
 1-9-标签，标签可不输
 ![f16321066fa883e8c685ad99fd2c140](https://s4.ax1x.com/2022/01/01/T5T5XF.png)
 ![f16321066fa883e8c685ad99fd2c140](https://s4.ax1x.com/2022/01/01/T5HAa9.png)
