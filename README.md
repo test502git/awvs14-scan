@@ -6,11 +6,23 @@
 ![awvs_config.ini](https://s1.ax1x.com/2020/08/06/agCwPs.png)
 
 
+
+
 ## 2022年1月1号，新支持批量添加目标，仅扫描log4j漏洞
 1-9-标签，标签可不输
 ![f16321066fa883e8c685ad99fd2c140](https://s4.ax1x.com/2022/01/01/T5hFfO.png)
 
 
+## AWVS14安装，最新支持log4j版本，完美破解版
+推荐使用docker 
+```
+安装
+docker pull xiaomimi8/awvs14-log4j-2022
+
+启动
+docker run -it -d -p 13443:3443 xiaomimi8/awvs14-log4j-2022
+
+```
 
 ## 联动Xray仅爬虫 说明一下 
 如果AWVS爬虫请求太多，此时发送给Xray，可能会占满Xray队列(max_length)，导致代理阻塞，由于Xray的阻塞，AWVS会导致爬虫超时，这个在Xray文档中有说明，所以在批量之前 ，尽可能把Xray的max_length的值设成很大
@@ -43,19 +55,6 @@
 
 #### awvs13批量添加并设置仅爬虫，配置好cookie等参数，发送到xray扫描器扫描
 ![awvs_add_url](https://github.com/test502git/awvs13_batch_py3/blob/master/add_log/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20200728204949.png)
-
-## AWVS14安装，最新支持log4j版本，完美破解版
-推荐使用docker 
-```
-安装
-docker pull xiaomimi8/awvs14-log4j-2022
-
-启动
-docker run -it -d -p 13443:3443 xiaomimi8/awvs14-log4j-2022
-
-
-
-```
 
 
 ## AWVS性能优化(防止AWVS宕机) 1核1G vps举例
