@@ -25,9 +25,6 @@ docker run -it -d -p 13443:3443 xiaomimi8/awvs14-log4j-2022
 
 ```
 
-## 联动Xray 说明一下 
-如果AWVS爬虫请求太多，此时发送给Xray，可能会占满Xray队列(max_length)，导致代理阻塞，由于Xray的阻塞，AWVS会导致爬虫超时，这个在Xray文档中有说明，所以在批量之前 ，尽可能把Xray的max_length的值设成很大
-
 ## 脚本功能
 支持AWVS13的API接口
 
@@ -53,7 +50,7 @@ docker run -it -d -p 13443:3443 xiaomimi8/awvs14-log4j-2022
 
 现在就可以根据自己需求进行扫描吧
 
-如
+如其他用法
 #### awvs13批量添加并设置仅爬虫，配置好cookie等参数，发送到xray扫描器扫描
 ![awvs_add_url](https://github.com/test502git/awvs13_batch_py3/blob/master/add_log/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20200728204949.png)
 
