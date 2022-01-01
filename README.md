@@ -3,7 +3,7 @@
 如果觉得还不错，请给本项目一个star
 
 # AWVS13\14 api脚本
-![awvs_config.ini](https://s1.ax1x.com/2020/08/06/agCwPs.png)
+![awvs_config.ini](https://s4.ax1x.com/2022/01/01/T5TeoR.png)
 
 
 
