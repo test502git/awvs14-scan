@@ -31,6 +31,7 @@ docker run -it -d -p 13443:3443 xiaomimi8/awvs14-log4j-2022
 支持AWVS13的API接口
 
 * 支持URL批量添加扫描
+* 支持批量扫描apache-log4j漏洞
 * 支持对批量url添加`cooKie`凭证进行爬虫扫描
 * 支持结合被动扫描器进行配置扫描,如：`xray`,`w13scan`,`burp`等扫描器
 * 支持一键删除所有任务
@@ -38,7 +39,6 @@ docker run -it -d -p 13443:3443 xiaomimi8/awvs14-log4j-2022
 * 支持对扫描器内已有目标进行批量扫描，支持自定义扫描类型
 
 ## 使用教程
-
 
 ### awvs_config.ini请使用专业编辑器打开，记事本会改变原有格式，导致报错
 
@@ -52,7 +52,7 @@ docker run -it -d -p 13443:3443 xiaomimi8/awvs14-log4j-2022
 
 现在就可以根据自己需求进行扫描吧
 
-
+如
 #### awvs13批量添加并设置仅爬虫，配置好cookie等参数，发送到xray扫描器扫描
 ![awvs_add_url](https://github.com/test502git/awvs13_batch_py3/blob/master/add_log/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20200728204949.png)
 
