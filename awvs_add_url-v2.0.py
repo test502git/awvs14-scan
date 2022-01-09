@@ -76,6 +76,20 @@ def get_target_list():#获取扫描器内所有目标
             return r.text
 
 
+def get_scan_status():#获取扫描状态
+    try:
+        global pages,target_list
+        target_dict={}
+        get_target_url=awvs_url+'/api/v1/me/stats'
+        r = requests.get(get_target_url, headers=headers, timeout=30, verify=False)
+        result = json.loads(r.content.decode())
+        print('\n扫描中:',result['scans_running_count'],'等待扫描:',result['scans_waiting_count'],'已扫描:',result['scans_conducted_count'],'漏洞总数:',str(result['vuln_count'])+'\n主要漏洞')
+        for xxxx in result['top_vulnerabilities']:
+            print('漏洞名称:',xxxx['name'],'漏洞数量:',xxxx['count'])
+    except Exception as e:
+        print(e)
+
+
 def addTask(url,target):
     global scan_label
     try:
@@ -276,7 +290,7 @@ AWVS批量添加目标，批量扫描log4j，支持awvs13批量联动被动扫�
 1 【批量添加url到AWVS扫描器扫描】
 2 【一键删除扫描器内所有目标】
 3 【对扫描器中已有目标，进行扫描】 
-4 【一键停止扫描目前所有扫描任务】 开发
+4 【获取当前扫描状态】 
     """)
     selection=int(input('请输入数字:'))
     if selection==1:
@@ -286,3 +300,5 @@ AWVS批量添加目标，批量扫描log4j，支持awvs13批量联动被动扫�
     elif selection==3:
         target_scan=True
         main()
+    elif selection==4:
+        get_scan_status()
