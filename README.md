@@ -19,7 +19,7 @@
 1-9-标签，标签可不输
 ![f16321066fa883e8c685ad99fd2c140](https://s4.ax1x.com/2022/01/01/T5T5XF.png)
 ![f16321066fa883e8c685ad99fd2c140](https://s4.ax1x.com/2022/01/01/T5HAa9.png)
-## AWVS14，本版本支持log4j版本漏洞
+## AWVS14安装，本版本支持log4j版本漏洞
 推荐使用docker 
 ```
 安装
