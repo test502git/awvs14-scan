@@ -1,8 +1,19 @@
 # 免责声明
 本项目仅用于安全自查，请勿利用文章内的相关工具与技术从事非法测试，如因此产生的一切不良后果与本项目无关
 
+# AWVS14 推荐docker安装，本版本支持log4j版本漏洞
+推荐使用docker 
+```
+安装
+docker pull xiaomimi8/awvs14-log4j-2022
 
-如果觉得还不错，请给本项目一个star
+启动
+docker run -it -d -p 13443:3443 xiaomimi8/awvs14-log4j-2022
+
+用户名：admin@admin.com 密码：Admin123 
+```
+
+
 
 # AWVS13\14 api脚本
 ![awvs_config.ini](https://s4.ax1x.com/2022/01/01/T5TeoR.png)
@@ -19,17 +30,7 @@
 1-9-标签，标签可不输
 ![f16321066fa883e8c685ad99fd2c140](https://s4.ax1x.com/2022/01/01/T5T5XF.png)
 ![f16321066fa883e8c685ad99fd2c140](https://s4.ax1x.com/2022/01/01/T5HAa9.png)
-## AWVS14安装，本版本支持log4j版本漏洞
-推荐使用docker 
-```
-安装
-docker pull xiaomimi8/awvs14-log4j-2022
 
-启动
-docker run -it -d -p 13443:3443 xiaomimi8/awvs14-log4j-2022
-
-用户名：admin@admin.com 密码：Admin123 
-```
 
 ## 脚本功能
 支持AWVS13、14的API接口
