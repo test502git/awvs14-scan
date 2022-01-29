@@ -2,7 +2,8 @@
 本项目仅用于安全自查，请勿利用文章内的相关工具与技术从事非法测试，如因此产生的一切不良后果与本项目无关
 
 ## awvs14-scan
-修复多个Bug
+修复多个Bug，config增加配置参数
+
 针对 AWVS 14版本开发的批量扫描脚本，支持log4j漏洞专项，支持联动xray、burp、w13scan等被动批量扫描，灵活自定义
 
 ![image](https://user-images.githubusercontent.com/50769953/151646867-0af1e935-7ae2-49de-aae7-c87b849050ac.png)
