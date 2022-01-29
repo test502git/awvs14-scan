@@ -33,6 +33,7 @@ docker run -it -d -p 13443:3443 xiaomimi8/awvs14-log4j-2022
 
 用户名：admin@admin.com 密码：Admin123
 ```
+<!-- 你看不到我看不到我 
 
 ## 性能优化(防止awvs宕机)   
 主要防止把宿主机资源占满导致服务不可用
@@ -55,4 +56,4 @@ docker update --memory 512m --memory-swap -1 awvs容器id
 ```
 docker update --restart=always awvs容器id 
 ```
-
+-->
