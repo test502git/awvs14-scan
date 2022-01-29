@@ -7,9 +7,7 @@
 针对 AWVS 14版本开发的批量扫描脚本，支持log4j漏洞专项，支持联动xray、burp、w13scan等被动批量扫描，灵活自定义
 
 ![image](https://user-images.githubusercontent.com/50769953/151646867-0af1e935-7ae2-49de-aae7-c87b849050ac.png)
-![image](https://user-images.githubusercontent.com/50769953/151646798-55394213-cda2-4f55-aac8-a2f945aba6fc.png)
 ![image](https://user-images.githubusercontent.com/50769953/151647173-e9420a24-19f3-4031-a185-09732de66b22.png)
-
 
 
 ## 14版本脚本功能
@@ -35,3 +33,26 @@ docker run -it -d -p 13443:3443 xiaomimi8/awvs14-log4j-2022
 
 用户名：admin@admin.com 密码：Admin123
 ```
+
+## 性能优化(防止awvs宕机)   
+#### CPU限制
+如： 假机器只有1核，下面是限制awvs最多使用0.5核，  那么主机最多cpu占用率不会超过50%
+按机器实际情况配置
+```
+docker update --cpus 0.5 --memory-swap -1 awvs容器id
+
+```
+
+#### 内存限制
+如： 限制awvs 最多占用0.5G内存
+按机器实际情况配置
+```
+docker update --memory 512m --memory-swap -1 awvs容器id
+```
+
+#### 容器自启
+主要防止意外情况主机的重启 后awvs不会自启
+```
+docker update --restart=always awvs容器id 
+```
+
