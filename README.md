@@ -35,12 +35,12 @@ docker run -it -d -p 13443:3443 xiaomimi8/awvs14-log4j-2022
 ```
 
 ## 性能优化(防止awvs宕机)   
+主要防止把宿主机资源占满导致服务不可用
 #### CPU限制
 如： 假机器只有1核，下面是限制awvs最多使用0.5核，  那么主机最多cpu占用率不会超过50%
 按机器实际情况配置
 ```
 docker update --cpus 0.5 --memory-swap -1 awvs容器id
-
 ```
 
 #### 内存限制
