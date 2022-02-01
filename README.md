@@ -22,7 +22,7 @@
 * 支持对扫描器内已有目标进行批量扫描，支持自定义扫描类型
 
 
-## AWVS14 推荐docker安装，本版本较新，能支持log4j版本漏洞
+## Linux AWVS14 docker安装，本版本较新，能支持log4j版本漏洞
 推荐使用docker 
 ```
 安装
@@ -33,6 +33,15 @@ docker run -it -d -p 13443:3443 xiaomimi8/awvs14-log4j-2022
 
 用户名：admin@admin.com 密码：Admin123
 ```
+
+## Windows AWVS v14.6.220117111-完美破解版本 修复扫描失败
+```
+https://cloud.189.cn/t/j6juMb2mmIre (访问码:9xct)  
+
+```
+
+
+
 <!-- 彩蛋
 
 ## 性能优化(防止awvs宕机)   
