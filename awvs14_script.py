@@ -223,6 +223,7 @@ def main():
         "9": "apache-log4j",
         "10": "custom-Bounty",
         "11": "custom-cve",
+        "12": "custom",
     }
     if target_scan==False:
         print("""选择要扫描的类型：
@@ -237,6 +238,7 @@ def main():
 9 【仅扫描apache-log4j】(请需先确保当前版本已支持log4j扫描,awvs 14.6.211220100及以上)
 10 【开始扫描Bug Bounty高频漏洞】
 11 【扫描已知漏洞】（常见CVE，POC等）
+12 【自定义模板】
 """)
     else:
         print("""对扫描器中已有目标进行扫描，选择要扫描的类型：
@@ -250,6 +252,7 @@ def main():
 9 【仅扫描apache-log4j】(请需先确保当前版本已支持log4j扫描,awvs 14.6.211220100及以上)
 10 【开始扫描Bug Bounty高频漏洞】
 11 【扫描已知漏洞】（常见CVE，POC等）
+12 【自定义模板】
 """)
 
     scan_type = str(input('请输入数字:'))
@@ -267,6 +270,8 @@ def main():
             profile_id=custom_bug_bounty()
         if '11' == scan_type:
             profile_id=custom_cves()
+        if '12' == scan_type:
+            profile_id=str(input('输入已定义好模板profile_id:'))
 
     except Exception as e:
         print('输入有误，检查',e)
