@@ -7,8 +7,6 @@
 针对 AWVS 14版本开发的批量扫描脚本，支持log4j漏洞专项，支持联动xray、burp、w13scan等被动批量扫描，灵活自定义
 
 ![image](https://user-images.githubusercontent.com/50769953/151646867-0af1e935-7ae2-49de-aae7-c87b849050ac.png)
-![image](https://user-images.githubusercontent.com/50769953/151647173-e9420a24-19f3-4031-a185-09732de66b22.png)
-
 
 ## 14版本脚本功能
 仅支持AWVS14版本的API接口
