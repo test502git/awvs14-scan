@@ -169,7 +169,7 @@ def custom_log4j():  # 增加自定义扫描log4j
 
     r = requests.post(get_target_url, data=json.dumps(post_data), headers=headers, timeout=30, verify=False)
     result = json.loads(r.content.decode())
-    get_target_url = awvs_url + 'api/v1/scanning_profiles'
+    get_target_url = awvs_url + '/api/v1/scanning_profiles'
     r = requests.get(get_target_url, headers=headers, timeout=30, verify=False)
     result = json.loads(r.content.decode())
     for xxx in result['scanning_profiles']:
@@ -183,7 +183,7 @@ def custom_bug_bounty():  # 增加自定义扫描bug_bounty
 
     r = requests.post(get_target_url, data=json.dumps(post_data), headers=headers, timeout=30, verify=False)
     result = json.loads(r.content.decode())
-    get_target_url = awvs_url + 'api/v1/scanning_profiles'
+    get_target_url = awvs_url + '/api/v1/scanning_profiles'
     r = requests.get(get_target_url, headers=headers, timeout=30, verify=False)
     result = json.loads(r.content.decode())
     for xxx in result['scanning_profiles']:
@@ -198,7 +198,7 @@ def custom_cves():  # 增加自定义扫描常见cve
 
     r = requests.post(get_target_url, data=json.dumps(post_data), headers=headers, timeout=30, verify=False)
     result = json.loads(r.content.decode())
-    get_target_url = awvs_url + 'api/v1/scanning_profiles'
+    get_target_url = awvs_url + '/api/v1/scanning_profiles'
     r = requests.get(get_target_url, headers=headers, timeout=30, verify=False)
     result = json.loads(r.content.decode())
     for xxx in result['scanning_profiles']:
