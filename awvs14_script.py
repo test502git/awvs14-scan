@@ -138,7 +138,34 @@ def configuration(url,target_id,target,default_scanning_profile_id):#配置目�
     r = requests.patch(url=configuration_url,data=json.dumps(data), headers=headers, timeout=30, verify=False)
     #print(configuration_url,r.text)
 
-def delete_targets():#删除全部扫描目标
+
+def delete_task():#删除全部扫描任务
+    global awvs_url, apikey, headers
+    print(123123)
+    while 1:
+        quer = '/api/v1/scans?l=20'
+        try:
+            r = requests.get(awvs_url+quer, headers=headers, timeout=30, verify=False)
+            result = json.loads(r.content.decode())
+            if int(len(result['scans'])) == 0:
+                print('已全部删除扫描任务，当前任务为空')
+                return 0
+            for targetsid in range(len(result['scans'])):
+                task_id = result['scans'][targetsid]['scan_id']
+                task_address = result['scans'][targetsid]['target']['address']
+                try:
+                    del_log=requests.delete(awvs_url+'/api/v1/scans/'+task_id,headers=headers, timeout=30, verify=False)
+                    if del_log.status_code == 204:
+                        print(task_address,' 删除扫描任务成功')
+                except Exception as e:
+                    print(task_address,e)
+        except Exception as e:
+            print(awvs_url+quer,e)
+
+
+
+
+def delete_targets():#删除全部扫描目标与任务
     global awvs_url,apikey,headers
     while 1:
         quer='/api/v1/targets'
@@ -315,15 +342,15 @@ def main():
                 print(str(target_for['address'])+' 扫描失败 ',e)
 
 if __name__ == '__main__':
-
     print(    """
 ********************************************************************      
 AWVS14 批量添加，批量扫描，支持awvs14批量联动被动扫描器等功能                                                                                                        
 作者微信：SRC-ALL
 ********************************************************************
 1 【批量添加url到AWVS扫描器扫描】
-2 【一键删除扫描器内所有目标】
-3 【对扫描器中已有目标，进行扫描】 
+2 【删除扫描器内所有目标与扫描任务】
+3 【删除所有扫描任务(不删除目标)】
+4 【对扫描器中已有目标，进行扫描】 
     """)
     selection=int(input('请输入数字:'))
     if selection==1:
@@ -331,6 +358,8 @@ AWVS14 批量添加，批量扫描，支持awvs14批量联动被动扫描器等�
     elif selection==2:
         delete_targets()
     elif selection==3:
+        delete_task()
+    elif selection==4:
         target_scan=True
         main()
 
