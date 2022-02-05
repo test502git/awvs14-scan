@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
-import sys,os
+import sys,os,time
+from time import strftime,gmtime
 version = sys.version_info
 if version < (3, 0):
     print('The current version is not supported, you need to use python3')
@@ -27,6 +28,7 @@ try:
     scan_cookie = cf.get('scan_seting', 'cookie').replace('\n', '').strip()  # 处理前后空格 与换行
     proxy_enabled = cf.get('scan_seting', 'proxy_enabled')
     proxy_server = cf.get('scan_seting', 'proxy_server')
+    webhook_key = cf.get('scan_seting', 'webhook_key')
 
 except Exception as e:
     print('初始化失败，获取config.ini失败，请检查config.ini文件配置是否正确\n', e)
@@ -37,6 +39,63 @@ add_count_suss=0
 error_count=0
 target_scan=False
 target_list=[]
+
+
+
+def push_wechat_group(content):
+    global webhook_key
+    try:
+        # print('开始推送')
+        # 这里修改为自己机器人的webhook地址
+        resp = requests.post("https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key="+webhook_key,
+                             json={"msgtype": "markdown",
+                                   "markdown": {"content": content}})
+        print(content)
+        if 'invalid webhook url' in str(resp.text):
+            print('企业微信key 无效,无法正常推送')
+            sys.exit()
+        if resp.json()["errcode"] != 0:
+            raise ValueError("push wechat group failed, %s" % resp.text)
+    except Exception as e:
+        print(e)
+
+#initial value
+def message_push():#定时循环检测高危漏洞数量，有变化即通知
+    try:
+        get_target_url=awvs_url+'/api/v1/me/stats'
+        r = requests.get(get_target_url, headers=headers, timeout=30, verify=False)
+        result = json.loads(r.content.decode())
+        #print(result)
+        init_high_count = result['vuln_count']['high']
+        print('当前高危:',init_high_count)
+
+        while 1:
+            time.sleep(1)
+            r2 = requests.get(get_target_url, headers=headers, timeout=30, verify=False)
+            result = json.loads(r2.content.decode())
+            high_count = result['vuln_count']['high']
+            if high_count!=init_high_count:
+                current_date = str(strftime("%Y-%m-%d %H:%M:%S", gmtime()))
+                message_push = '高危漏洞数里发现变化，消息通知' + '\n\n' + str(result['vuln_count']) + ' '+current_date+'\n'
+                print(message_push,)
+                for xxx in result['most_vulnerable_targets']:
+                    print('目标:',xxx['address'])
+                    message_push=message_push+'目标:'+xxx['address']+'\n'
+
+                for xxxx in result['top_vulnerabilities']:
+                    message_push = message_push+'主要漏洞: ' + xxxx['name'] + '数量: '+str(xxxx['count'])+'\n'
+                push_wechat_group(message_push)
+
+                init_high_count=high_count
+                message_push=''
+            else:
+                #print('高危漏洞数量无变化 ',high_count)
+                init_high_count = high_count
+
+    except Exception as e:
+        print(e)
+
+
 
 def get_scan_status():#获取扫描状态
     try:
@@ -141,7 +200,7 @@ def configuration(url,target_id,target,default_scanning_profile_id):#配置目�
 
 def delete_task():#删除全部扫描任务
     global awvs_url, apikey, headers
-    print(123123)
+    #print(123123)
     while 1:
         quer = '/api/v1/scans?l=20'
         try:
@@ -351,6 +410,7 @@ AWVS14 批量添加，批量扫描，支持awvs14批量联动被动扫描器等�
 2 【删除扫描器内所有目标与扫描任务】
 3 【删除所有扫描任务(不删除目标)】
 4 【对扫描器中已有目标，进行扫描】 
+5 【高危漏洞消息推送】 企业微信机器人
     """)
     selection=int(input('请输入数字:'))
     if selection==1:
@@ -362,4 +422,6 @@ AWVS14 批量添加，批量扫描，支持awvs14批量联动被动扫描器等�
     elif selection==4:
         target_scan=True
         main()
-
+    elif selection==5:
+        push_wechat_group('已开启高危漏洞监控消息推送')
+        message_push()
