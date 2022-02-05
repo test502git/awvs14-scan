@@ -70,7 +70,7 @@ def message_push():#定时循环检测高危漏洞数量，有变化即通知
         print('当前高危:',init_high_count)
 
         while 1:
-            time.sleep(1)
+            time.sleep(30)#默认30秒扫描一次
             r2 = requests.get(get_target_url, headers=headers, timeout=30, verify=False)
             result = json.loads(r2.content.decode())
             high_count = result['vuln_count']['high']
