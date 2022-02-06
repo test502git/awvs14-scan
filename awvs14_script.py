@@ -70,13 +70,13 @@ def message_push():#定时循环检测高危漏洞数量，有变化即通知
         print('当前高危:',init_high_count)
 
         while 1:
-            time.sleep(30)#默认30秒扫描一次
+            time.sleep(1)
             r2 = requests.get(get_target_url, headers=headers, timeout=30, verify=False)
             result = json.loads(r2.content.decode())
             high_count = result['vuln_count']['high']
             if high_count!=init_high_count:
                 current_date = str(strftime("%Y-%m-%d %H:%M:%S", gmtime()))
-                message_push = '高危漏洞数里发现变化，消息通知' + '\n\n' + str(result['vuln_count']) + ' '+current_date+'\n'
+                message_push = '高危漏洞数里发生变化，消息通知' + '\n\n' + str(result['vuln_count']) + ' \n\n'+current_date+'\n'
                 print(message_push,)
                 for xxx in result['most_vulnerable_targets']:
                     print('目标:',xxx['address'])
