@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 import sys,os,time
+import socket
+
 from time import strftime,gmtime
 version = sys.version_info
 if version < (3, 0):
@@ -28,7 +30,7 @@ try:
     scan_cookie = cf.get('scan_seting', 'cookie').replace('\n', '').strip()  # 处理前后空格 与换行
     proxy_enabled = cf.get('scan_seting', 'proxy_enabled')
     proxy_server = cf.get('scan_seting', 'proxy_server')
-    webhook_key = cf.get('scan_seting', 'webhook_key')
+    webhook_url = cf.get('scan_seting', 'webhook_url')
 
 except Exception as e:
     print('初始化失败，获取config.ini失败，请检查config.ini文件配置是否正确\n', e)
@@ -43,11 +45,11 @@ target_list=[]
 
 
 def push_wechat_group(content):
-    global webhook_key
+    global webhook_url
     try:
         # print('开始推送')
         # 这里修改为自己机器人的webhook地址
-        resp = requests.post("https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key="+webhook_key,
+        resp = requests.post(webhook_url,
                              json={"msgtype": "markdown",
                                    "markdown": {"content": content}})
         print(content)
@@ -76,7 +78,8 @@ def message_push():#定时循环检测高危漏洞数量，有变化即通知
             high_count = result['vuln_count']['high']
             if high_count!=init_high_count:
                 current_date = str(strftime("%Y-%m-%d %H:%M:%S", gmtime()))
-                message_push = '高危漏洞数里发生变化，消息通知' + '\n\n' + str(result['vuln_count']) + ' \n\n'+current_date+'\n'
+                message_push=str(socket.gethostname())+'\n\n'
+                message_push = message_push+'高危漏洞数里发生变化，消息通知' + '\n\n' + str(result['vuln_count']) + ' \n\n'+current_date+'\n'
                 print(message_push,)
                 for xxx in result['most_vulnerable_targets']:
                     print('目标:',xxx['address'])
