@@ -166,10 +166,8 @@ def scan(url,target,profile_id,is_to_scan):
     target_id = addTask(url,target)
     if target_id:
         try:
-            configuration(url,target_id,target,profile_id)#配置目标参数信息
+            configuration(url,target_id,target,profile_id)#配置目标参数
 
-            #print(proxy_address,proxy_port)
-            #input(123)
             if is_to_scan:
                 data = {"target_id": target_id, "profile_id": profile_id, "incremental": False,
                         "schedule": {"disable": False, "start_date": None, "time_sensitive": False}}
@@ -428,5 +426,5 @@ AWVS14 批量添加，批量扫描，支持awvs14批量联动被动扫描器等�
         target_scan=True
         main()
     elif selection==5:
-        push_wechat_group('已开启高危漏洞监控消息推送，需保持脚本前台运行，不会被结束')
+        push_wechat_group('已开启高危漏洞消息推送，需保持脚本前台运行，不会被结束')
         message_push()
