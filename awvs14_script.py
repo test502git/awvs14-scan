@@ -175,10 +175,10 @@ def scan(url,target,profile_id,is_to_scan):
                         "schedule": {"disable": False, "start_date": None, "time_sensitive": False}}
                 response = requests.post(scanUrl, data=json.dumps(data), headers=headers, timeout=30, verify=False)
                 result = json.loads(response.content)
-                return result['target_id']
+                return [1,result['target_id']]
             else:
                 print(target, '目标仅添加成功')
-                return 2
+                return [2,0]
 
         except Exception as e:
             print(e)
@@ -379,11 +379,11 @@ def main():
                     target='http://'+target
 
                 target_state=scan(awvs_url,target,profile_id,is_to_scan)
-                if target_state!=2:
+                if target_state[0]==1:
                     open('./add_log/success.txt','a',encoding='utf-8').write(target+'\n')
                     add_count_suss=add_count_suss+1
                     print("{0} 已加入到扫描队列 ，第:".format(target),str(add_count_suss))
-                elif target_state==2:
+                elif target_state[0]==2:
                     pass
                 else:
                     open('./add_log/error_url.txt', 'a', encoding='utf-8').write(target + '\n')
