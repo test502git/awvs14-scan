@@ -25,12 +25,12 @@ try:
     input_urls=cf.get('awvs_url_key','domain_file')
     excluded_paths = ast.literal_eval(cf.get('scan_seting', 'excluded_paths'))
     custom_headers = ast.literal_eval(cf.get('scan_seting', 'custom_headers'))
-    limit_crawler_scope = cf.get('scan_seting', 'limit_crawler_scope')
-    scan_speed = cf.get('scan_seting', 'scan_speed')
+    limit_crawler_scope = cf.get('scan_seting', 'limit_crawler_scope').replace('\n', '').strip()  # 处理前后空格 与换行
+    scan_speed = cf.get('scan_seting', 'scan_speed').replace('\n', '').strip()  # 处理前后空格 与换行
     scan_cookie = cf.get('scan_seting', 'cookie').replace('\n', '').strip()  # 处理前后空格 与换行
-    proxy_enabled = cf.get('scan_seting', 'proxy_enabled')
-    proxy_server = cf.get('scan_seting', 'proxy_server')
-    webhook_url = cf.get('scan_seting', 'webhook_url')
+    proxy_enabled = cf.get('scan_seting', 'proxy_enabled').replace('\n', '').strip()  # 处理前后空格 与换行
+    proxy_server = cf.get('scan_seting', 'proxy_server').replace('\n', '').strip()  # 处理前后空格 与换行
+    webhook_url = cf.get('scan_seting', 'webhook_url').replace('\n', '').strip()  # 处理前后空格 与换行
 
 except Exception as e:
     print('初始化失败，获取config.ini失败，请检查config.ini文件配置是否正确\n', e)
@@ -72,29 +72,31 @@ def message_push():#定时循环检测高危漏洞数量，有变化即通知
         print('当前高危:',init_high_count)
 
         while 1:
-            time.sleep(1)
-            r2 = requests.get(get_target_url, headers=headers, timeout=30, verify=False)
-            result = json.loads(r2.content.decode())
-            high_count = result['vuln_count']['high']
-            if high_count!=init_high_count:
-                current_date = str(strftime("%Y-%m-%d %H:%M:%S", gmtime()))
-                message_push=str(socket.gethostname())+'\n\n'
-                message_push = message_push+'高危漏洞数里发生变化，消息通知' + '\n\n' + str(result['vuln_count']) + ' \n\n'+current_date+'\n'
-                print(message_push,)
-                for xxx in result['most_vulnerable_targets']:
-                    print('目标:',xxx['address'])
-                    message_push=message_push+'目标:'+xxx['address']+'\n'
+            try:
+                time.sleep(10)
+                r2 = requests.get(get_target_url, headers=headers, timeout=30, verify=False)
+                result = json.loads(r2.content.decode())
+                high_count = result['vuln_count']['high']
+                if high_count!=init_high_count:
+                    current_date = str(strftime("%Y-%m-%d %H:%M:%S", gmtime()))
+                    message_push=str(socket.gethostname())+'\n\n'
+                    message_push = message_push+'高危漏洞数量变化' + '\n\n' + str(result['vuln_count']) + ' \n\n'+current_date+'\n'
+                    print(message_push,)
+                    for xxx in result['most_vulnerable_targets']:
+                        print('目标:',xxx['address'])
+                        message_push=message_push+'目标:'+xxx['address']+'\n'
 
-                for xxxx in result['top_vulnerabilities']:
-                    message_push = message_push+'主要漏洞: ' + xxxx['name'] + '数量: '+str(xxxx['count'])+'\n'
-                push_wechat_group(message_push)
+                    for xxxx in result['top_vulnerabilities']:
+                        message_push = message_push+'漏洞: ' + xxxx['name'] + '数量: '+str(xxxx['count'])+'\n'
+                    push_wechat_group(message_push)
 
-                init_high_count=high_count
-                message_push=''
-            else:
-                #print('高危漏洞数量无变化 ',high_count)
-                init_high_count = high_count
-
+                    init_high_count=high_count
+                    message_push=''
+                else:
+                    #print('高危漏洞数量无变化 ',high_count)
+                    init_high_count = high_count
+            except Exception as e:
+                print('监控出错了，请检查',e)
     except Exception as e:
         print(e)
 
@@ -108,7 +110,7 @@ def get_scan_status():#获取扫描状态
         result = json.loads(r.content.decode())
         print('扫描中:',result['scans_running_count'],'等待扫描:',result['scans_waiting_count'],'已扫描:',result['scans_conducted_count'],'漏洞总数:',str(result['vuln_count'])+'\n主要漏洞')
         for xxxx in result['top_vulnerabilities']:
-            print('漏洞名称:',xxxx['name'],'漏洞数量:',xxxx['count'])
+            print('漏洞名称:',xxxx['name'],' 漏洞数量:',xxxx['count'])
     except Exception as e:
         print(e)
 
@@ -426,5 +428,5 @@ AWVS14 批量添加，批量扫描，支持awvs14批量联动被动扫描器等�
         target_scan=True
         main()
     elif selection==5:
-        push_wechat_group('已开启高危漏洞监控消息推送')
+        push_wechat_group('已开启高危漏洞监控消息推送，需保持脚本前台运行，不会被结束')
         message_push()
