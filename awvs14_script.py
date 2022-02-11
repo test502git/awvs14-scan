@@ -377,16 +377,19 @@ def main():
                     target='http://'+target
 
                 target_state=scan(awvs_url,target,profile_id,is_to_scan)
-                if target_state[0]==1:
-                    open('./add_log/success.txt','a',encoding='utf-8').write(target+'\n')
-                    add_count_suss=add_count_suss+1
-                    print("{0} 已加入到扫描队列 ，第:".format(target),str(add_count_suss))
-                elif target_state[0]==2:
-                    pass
-                else:
-                    open('./add_log/error_url.txt', 'a', encoding='utf-8').write(target + '\n')
-                    error_count=error_count+1
-                    print("{0} 添加失败".format(target),str(error_count))
+                try:
+                    if target_state[0]==1:
+                        open('./add_log/success.txt','a',encoding='utf-8').write(target+'\n')
+                        add_count_suss=add_count_suss+1
+                        print("{0} 已加入到扫描队列 ，第:".format(target),str(add_count_suss))
+                    elif target_state[0]==2:
+                        pass
+                    else:
+                        open('./add_log/error_url.txt', 'a', encoding='utf-8').write(target + '\n')
+                        error_count=error_count+1
+                        print("{0} 添加失败".format(target),str(error_count))
+                except Exception as e:
+                    print(target,'添加扫描失败', e)
 
     elif target_scan==True:#对已有目标扫描
         scanUrl2= ''.join((awvs_url, '/api/v1/scans'))
