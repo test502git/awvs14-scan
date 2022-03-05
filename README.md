@@ -61,6 +61,13 @@ docker run -it -d -p 13443:3443 xiaomimi8/awvs14-log4j-2022
 用户名：admin@admin.com 密码：Admin123
 ```
 
+## Windows AWVS v14.7.220228146 -完美破解 2022-3-1
+```
+
+
+```
+
+
 ## Windows AWVS v14.6.220117111-完美破解版本 修复扫描失败
 ```
 https://cloud.189.cn/t/j6juMb2mmIre (访问码:9xct)  
