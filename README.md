@@ -63,7 +63,7 @@ docker run -it -d -p 13443:3443 xiaomimi8/awvs14-log4j-2022
 
 ## Windows AWVS v14.7.220228146 -完美破解 2022-3-1
 ```
-
+https://cloud.189.cn/t/b673Ezv6fyQb (访问码:d4ng)
 
 ```
 
