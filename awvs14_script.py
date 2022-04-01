@@ -30,7 +30,6 @@ try:
     scan_cookie = cf.get('scan_seting', 'cookie').replace('\n', '').strip()  # 处理前后空格 与换行
     proxy_enabled = cf.get('scan_seting', 'proxy_enabled').replace('\n', '').strip()  # 处理前后空格 与换行
     proxy_server = cf.get('scan_seting', 'proxy_server').replace('\n', '').strip()  # 处理前后空格 与换行
-    webhook_url = cf.get('scan_seting', 'webhook_url').replace('\n', '').strip()  # 处理前后空格 与换行
 
 except Exception as e:
     print('初始化失败，获取config.ini失败，请检查config.ini文件配置是否正确\n', e)
@@ -250,6 +249,20 @@ def delete_targets():#删除全部扫描目标与任务
         except Exception as e:
             print(awvs_url+quer,e)
 
+def custom_springshell():  # 增加自定义扫描springshell
+    get_target_url = awvs_url + '/api/v1/scanning_profiles'
+    # springshell
+    post_data = {"name":"Spring4Shell","custom":'true',"checks":["wvs/RPA","wvs/Crawler","wvs/target","wvs/input_group","wvs/deepscan","wvs/custom-scripts","wvs/MalwareScanner","wvs/location/zabbix/zabbix_audit.js","wvs/location/reverse_proxy_path_traversal.js","wvs/location/cors_origin_validation.js","wvs/location/yii2/yii2_gii.js","wvs/location/nodejs_source_code_disclosure.js","wvs/location/npm_debug_log.js","wvs/location/php_cs_cache.js","wvs/location/laravel_log_viewer_lfd.js","wvs/location/sap_b2b_lfi.js","wvs/location/nodejs_path_traversal_CVE-2017-14849.js","wvs/location/jquery_file_upload_rce.js","wvs/location/goahead_web_server_rce.js","wvs/location/file_upload_via_put_method.js","wvs/location/coldfusion/coldfusion_rds_login.js","wvs/location/coldfusion/coldfusion_request_debugging.js","wvs/location/coldfusion/coldfusion_robust_exception.js","wvs/location/coldfusion/coldfusion_add_paths.js","wvs/location/coldfusion/coldfusion_amf_deser.js","wvs/location/coldfusion/coldfusion_jndi_inj_rce.js","wvs/location/coldfusion/coldfusion_file_uploading_CVE-2018-15961.js","wvs/location/python_source_code_disclosure.js","wvs/location/ruby_source_code_disclosure.js","wvs/location/confluence/confluence_widget_SSTI_CVE-2019-3396.js","wvs/location/shiro/apache-shiro-deserialization-rce.js","wvs/location/coldfusion/coldfusion_flashgateway_deser_CVE-2019-7091.js","wvs/location/oraclebi/oracle_biee_convert_xxe_CVE-2019-2767.js","wvs/location/oraclebi/oracle_biee_adfresource_dirtraversal_CVE-2019-2588.js","wvs/location/oraclebi/oracle_biee_authbypass_CVE-2019-2768.js","wvs/location/oraclebi/oracle_biee_ReportTemplateService_xxe_CVE-2019-2616.js","wvs/location/oraclebi/oracle_biee_default_creds.js","wvs/location/hidden_parameters.js","wvs/location/asp_net_resolveurl_xss.js","wvs/location/oraclebi/oracle_biee_amf_deser_rce_CVE-2020-2950.js","wvs/location/composer_installed_json.js","wvs/location/typo3/typo3_audit.js","wvs/location/config_json_files_secrets_leakage.js","wvs/location/import_swager_files_from_common_locations.js","wvs/location/forgerock/forgerock_openam_deser_rce_CVE-2021-35464.js","wvs/location/web_cache_poisoning_dos_for_js.js","wvs/location/forgerock/forgerock_openam_ldap_inj_CVE-2021-29156.js","wvs/location/ghost/Ghost_Theme_Preview_XSS_CVE-2021-29484.js","wvs/location/qdpm/qdPM_Inf_Disclosure.js","wvs/location/apache_source_code_disclosure.js","wvs/location/oraclebi/oracle_biee_ReportTemplateService_xxe_CVE-2021-2400.js","wvs/location/Apache_Log4j_RCE_folder.js","wvs/Scripts","wvs/httpdata","ovas/"]}
+
+    r = requests.post(get_target_url, data=json.dumps(post_data), headers=headers, timeout=30, verify=False)
+    result = json.loads(r.content.decode())
+    get_target_url = awvs_url + '/api/v1/scanning_profiles'
+    r = requests.get(get_target_url, headers=headers, timeout=30, verify=False)
+    result = json.loads(r.content.decode())
+    for xxx in result['scanning_profiles']:
+        if xxx['name']=='Spring4Shell':
+            return xxx['profile_id']
+
 
 def custom_log4j():  # 增加自定义扫描log4j
     get_target_url = awvs_url + '/api/v1/scanning_profiles'
@@ -313,6 +326,7 @@ def main():
         "10": "custom-Bounty",
         "11": "custom-cve",
         "12": "custom",
+        "13": "Springshell",
     }
     if target_scan==False:
         print("""选择要扫描的类型：
@@ -328,6 +342,7 @@ def main():
 10 【开始扫描Bug Bounty高频漏洞】
 11 【扫描已知漏洞】（常见CVE，POC等）
 12 【自定义模板】
+13 【仅扫描Spring4ShellCVE-2022-22965】需确保当前版本已支持
 """)
     else:
         print("""对扫描器中已有目标进行扫描，选择要扫描的类型：
@@ -342,6 +357,7 @@ def main():
 10 【开始扫描Bug Bounty高频漏洞】
 11 【扫描已知漏洞】（常见CVE，POC等）
 12 【自定义模板】
+13 【仅扫描Spring4ShellCVE-2022-22965】需确保当前版本已支持
 """)
 
     scan_type = str(input('请输入数字:'))
@@ -361,6 +377,9 @@ def main():
             profile_id=custom_cves()
         if '12' == scan_type:
             profile_id=str(input('输入已定义好模板profile_id:'))
+        if '13' == scan_type:
+            profile_id=custom_springshell()
+
 
     except Exception as e:
         print('输入有误，检查',e)
