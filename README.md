@@ -52,7 +52,7 @@ config.ini 请使用编辑器更改，记事本会改会原有格式
 
 
 
-## Linux AWVS14 docker安装，本版本较新，能支持log4j版本漏洞
+## Linux AWVS14 docker安装
 推荐使用docker 
 ```
 安装
