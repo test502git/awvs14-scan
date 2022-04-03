@@ -56,26 +56,13 @@ config.ini 请使用编辑器更改，记事本会改会原有格式
 ## Linux AWVS14 docker安装
 推荐使用docker 
 ```
-安装
-docker pull xiaomimi8/awvs14-log4j-2022
+4月1号更新 支持Support Scanning !Spring4Shell (CVE-2022-22965) !!!
 
-启动
-docker run -it -d -p 13443:3443 xiaomimi8/awvs14-log4j-2022
+安装： docker push xiaomimi8/docker-awvs-14.7.220401065
 
-用户名：admin@admin.com 密码：Admin123
-```
+启动用法： docker run -it -d -p 13443:3443 xiaomimi8/docker-awvs-14.7.220401065
 
-## Windows AWVS v14.7.220228146 -完美破解 2022-3-1
-```
-https://cloud.189.cn/t/b673Ezv6fyQb (访问码:d4ng)
-
-```
-
-
-## Windows AWVS v14.6.220117111-完美破解版本 修复扫描失败
-```
-https://cloud.189.cn/t/j6juMb2mmIre (访问码:9xct)  
-
+登录： Username:admin@admin.com password:Admin123
 ```
 
 ## 赞赏码
