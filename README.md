@@ -58,7 +58,7 @@ config.ini 请使用编辑器更改，记事本会改会原有格式
 ```
 4月1号更新 支持Support Scanning !Spring4Shell (CVE-2022-22965) !!!
 
-安装： docker push xiaomimi8/docker-awvs-14.7.220401065
+安装： docker pull  xiaomimi8/docker-awvs-14.7.220401065
 
 启动用法： docker run -it -d -p 13443:3443 xiaomimi8/docker-awvs-14.7.220401065
 
