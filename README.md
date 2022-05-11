@@ -3,7 +3,7 @@
 
 本工具来自知识星球-BugBounty漏洞赏金自动化：
 
-![image](https://user-images.githubusercontent.com/50769953/158315604-d7ca76b3-2865-4a36-bd4a-2fe545576b35.png)
+![9800ca577beab9c92d8bc549db74703](https://user-images.githubusercontent.com/50769953/167792854-80836cd1-367c-4ac5-9666-4b22464a5abc.jpg)
 
 
 
