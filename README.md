@@ -2,12 +2,12 @@
 本项目仅用于安全自查，请勿利用文章内的相关工具与技术从事非法测试，如因此产生的一切不良后果与本项目无关
 
 
- <!-- 
+
 本工具来自知识星球-BugBounty漏洞赏金自动化：
 
 ![image](https://user-images.githubusercontent.com/50769953/167792916-20a9ee30-6f66-4f83-aa87-2c53e088565a.png)
 
---> 
+
 
 ## awvs14-scan
 修复多个Bug，config增加配置参数
