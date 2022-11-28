@@ -10,7 +10,7 @@
 
 
 ## awvs14-scan
-运动awvs14,15 修复多个Bug，config增加配置参数
+支持awvs14,15 修复多个Bug，config增加配置参数
 
 config.ini 请使用编辑器更改，记事本会改会原有格式
 
